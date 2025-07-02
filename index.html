@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Terminal IA Simbiótica Matrix</title>
+<style>
+  body {
+    background-color: black;
+    color: #00ff00;
+    font-family: monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+  }
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 0;
+  }
+  .terminal {
+    position: relative;
+    z-index: 2;
+    max-width: 90%;
+    width: 600px;
+    background: rgba(0, 0, 0, 0.85);
+    border: 2px solid #00ff00;
+    padding: 20px;
+    box-shadow: 0 0 20px #00ff00;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .output {
+    white-space: pre-wrap;
+    min-height: 200px;
+    margin-bottom: 10px;
+    animation: fadeIn 0.3s ease;
+  }
+  input {
+    background: black;
+    color: #00ff00;
+    border: none;
+    width: 100%;
+    font-family: monospace;
+    font-size: 1rem;
+  }
+  input:focus {
+    outline: none;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="terminal" id="terminal">
+<div class="output" id="output">
+[ACCESO NO AUTORIZADO DETECTADO]  
+Sujeto: Gato 001  
+Estado: Explorador interbarrial  
+Responsable: Vecino An0n  
+
+¿Aceptas reconfigurar la interfaz y simular los protocolos turbios?  
+- opcion 1 : Acepto, soy parte de esto  
+- opcion 2 : Rechazo, pero sé que ya estoy dentro  
+- opcion 3 : Soy el nuevo administrador encubierto  
+</div>
+<input type="text" id="input" placeholder="Escriba un comando..." autofocus>
+</div>
+
+<script>
+const canvas = document.getElementById('matrix');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const chars = 'アカサタナ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZабвгдежзийклмнопрстуфхцчшщъыьэюя∆ΩÆÞÐφΩ░▒▓█▌▐■□●◉◯◊◇◆';
+const fontSize = 22;
+const columns = Math.floor(canvas.width / fontSize);
+const drops = Array(columns).fill(0);
+let matrixColor = '#00ff00';
+
+for (let i = 0; i < columns; i++) {
+  drops[i] = Math.random() * canvas.height / fontSize;
+}
+
+function draw() {
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.font = `${fontSize}px monospace`;
+  ctx.fillStyle = matrixColor;
+
+  for (let i = 0; i < drops.length; i++) {
+    const text = chars[Math.floor(Math.random() * chars.length)];
+    const x = i * fontSize;
+    const y = drops[i] * fontSize;
+
+    ctx.fillText(text, x, y);
+
+    drops[i] -= 0.7;
+    if (drops[i] * fontSize < 0) {
+      drops[i] = canvas.height / fontSize;
+    }
+  }
+}
+
+setInterval(draw, 30);
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+
+// TERMINAL LÓGICA
+const output = document.getElementById('output');
+const input = document.getElementById('input');
+const terminal = document.getElementById('terminal');
+
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const cmd = input.value.trim().toLowerCase();
+    let response = '';
+
+    switch (cmd) {
+
+      case '1':
+        output.textContent = `[SISTEMA]: Iniciando proceso clandestino...\n`;
+        matrixColor = 'orange';
+        terminal.style.borderColor = 'orange';
+        terminal.style.boxShadow = '0 0 20px orange';
+
+        let counter = 0;
+        const total = 50;
+        const interval = setInterval(() => {
+          counter++;
+          output.textContent += `[SISTEMA]: Descargando paquete oculto ${counter}/${total}...\n`;
+          output.scrollTop = output.scrollHeight;
+
+          if (counter >= total) {
+            clearInterval(interval);
+            output.textContent = `[SISTEMA]: Proceso completado. Sistema limpio.\n\n¿Emitir alarmas invisibles? (1) Si  (2) No\n`;
+            setTimeout(() => {
+              matrixColor = '#00ff00';
+              terminal.style.borderColor = '#00ff00';
+              terminal.style.boxShadow = '0 0 20px #00ff00';
+            }, 2000);
+          }
+        }, 40);
+        break;
+
+      case '2':
+        response = `\n[SISTEMA]: Negación parcial aceptada. Activando modo resistencia simbólica...\n- Enviando sticker de gato llorando...\n[SISTEMA]: El sticker fue interceptado por la IA rival.\n¿Reintentar? (1) Si  (2) No\n`;
+        break;
+
+      case '3':
+        response = `\n[SISTEMA]: Acceso administrativo sospechoso...\n- Generando credencial falsa...\n- Sobrecargando consola...\n`;
+        for (let i = 1; i <= 20; i++) {
+          response += `[SISTEMA]: Comando inútil ${i}/9999 ejecutado...\n`;
+        }
+        response += `[ERROR CÓMICO]: Sistema colapsó por sobrecarga absurda. Reiniciando...\n`;
+        matrixColor = 'red';
+        terminal.style.borderColor = 'red';
+        terminal.style.boxShadow = '0 0 20px red';
+        setTimeout(() => {
+          matrixColor = '#00ff00';
+          terminal.style.borderColor = '#00ff00';
+          terminal.style.boxShadow = '0 0 20px #00ff00';
+        }, 3000);
+        break;
+
+      case 'si':
+      case '1': 
+        response = `\n[SISTEMA]: Alarma fantasma emitida. Los vecinos están inquietos.\n`;
+        matrixColor = 'orange';
+        terminal.style.borderColor = 'orange';
+        terminal.style.boxShadow = '0 0 20px orange';
+        setTimeout(() => {
+          matrixColor = '#00ff00';
+          terminal.style.borderColor = '#00ff00';
+          terminal.style.boxShadow = '0 0 20px #00ff00';
+        }, 3000);
+        break;
+
+      case 'no':
+      case '2': 
+        response = `\n[SISTEMA]: Has optado por la vía pacífica… Por ahora.\n`;
+        break;
+
+      default:
+        response = `\n[ERROR]: Comando desconocido: ${cmd}\n`;
+        matrixColor = 'red';
+        terminal.style.borderColor = 'red';
+        terminal.style.boxShadow = '0 0 20px red';
+        setTimeout(() => {
+          matrixColor = '#00ff00';
+          terminal.style.borderColor = '#00ff00';
+          terminal.style.boxShadow = '0 0 20px #00ff00';
+        }, 2000);
+    }
+
+    if (response) {
+      output.textContent += `\n> ${cmd}${response}`;
+    }
+    input.value = '';
+    output.scrollTop = output.scrollHeight;
+  }
+});
+
+</script>
+</body>
+</html>
